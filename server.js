@@ -15,6 +15,37 @@ app.use(bodyParser.json());
 
 // Your API will be built out here.
 
+// regular get
+app.get('/users', (req, res) => {
+	Person.find({}, (err, data) => {
+        if(err) throw err;
+        res.json(data);
+  });
+});
+
+// get with order
+app.get('/users/:direction', (req, res) => {
+	const { id } = req.params; //? query string
+
+	Person.aggregate([{$sort:{"firstName":1}}], (err, user) => {
+        if (err) throw err;
+          res.json(user);
+	});
+});
+
+
+// get by id
+app.get('/user-get-friends/:id', (req, res) => {
+	const { id } = req.params; //? query string
+
+	Person.findById(id, (err, user) => {
+        if (err) throw err;
+          res.json(user);
+	});
+});
+
+
+
 
 mongoose.Promise = global.Promise;
 const connect = mongoose.connect(
